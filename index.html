@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DEMON TASK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+  /* ─── متغیرهای طراحی و رنگ‌بندی تم تاریک مدرن ──────────────── */
+  :root {
+    --bg-void:   #080810;
+    --bg-base:   #0f0f1a;
+    --bg-panel:  #141424;
+    --bg-card:   #1c1c30;
+    --brd-subtle:#26263f;
+    --brd-active:#35355a;
+    --clr-main:  #a855f7;
+    --clr-main-d:#7c3aed;
+    --clr-accent:#ec4899;
+    --txt-main:  #f1f5f9;
+    --txt-sub:   #94a3b8;
+    --txt-muted: #64748b;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Vazirmatn', sans-serif;
+    background-color: var(--bg-void);
+    color: var(--txt-main);
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* ─── هدر اصلی سایت ─────────────────────────────────────── */
+  header {
+    background: rgba(13, 13, 26, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--brd-subtle);
+    padding: 12px 24px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-container {
+    max-width: 1400px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 20px; color: #fff; }
+  .logo span { color: var(--clr-main); }
+  
+  .global-progress-box { flex: 1; max-width: 450px; background: var(--bg-panel); padding: 8px 16px; border-radius: var(--radius-md); border: 1px solid var(--brd-subtle); }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; font-weight: 700; color: var(--txt-sub); }
+  .progress-bar-bg { height: 8px; background: var(--brd-subtle); border-radius: 99px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--clr-main-d), var(--clr-accent)); width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+
+  .backup-actions { display: flex; gap: 8px; }
+  .btn {
+    font-family: inherit; font-size: 13px; font-weight: 600; padding: 8px 16px;
+    border-radius: var(--radius-sm); border: none; cursor: pointer; transition: all 0.2s ease;
+    display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+  }
+  .btn-primary { background: linear-gradient(135deg, var(--clr-main-d), var(--clr-main)); color: #fff; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3); }
+  .btn-secondary { background: var(--bg-card); color: var(--txt-main); border: 1px solid var(--brd-subtle); }
+  .btn-secondary:hover { background: var(--brd-subtle); border-color: var(--brd-active); }
+  .btn-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+  .btn-danger:hover { background: rgba(239, 68, 68, 0.25); }
+  .btn-sm { padding: 5px 10px; font-size: 11px; border-radius: 6px; }
+
+  /* ─── لایوت اصلی کامپوننت‌ها ────────────────────────────────── */
+  .main-layout {
+    display: flex; flex: 1; max-width: 1400px; width: 100%; margin: 0 auto; padding: 24px; gap: 24px;
+  }
+
+  /* ─── منوی کناری (لیست ۱۰ درس) ────────────────────────────────── */
+  .sidebar {
+    width: 260px; flex-shrink: 0; background: var(--bg-panel);
+    border: 1px solid var(--brd-subtle); border-radius: var(--radius-lg); padding: 16px;
+    display: flex; flex-direction: column; gap: 6px; height: fit-content;
+  }
+  .sidebar-title { font-size: 14px; font-weight: 800; color: var(--txt-sub); padding: 0 8px 10px; border-bottom: 1px solid var(--brd-subtle); margin-bottom: 8px; }
+  
+  .subject-tab {
+    display: flex; align-items: center; justify-content: space-between; padding: 12px 14px;
+    border-radius: var(--radius-md); background: transparent; border: none; text-align: right;
+    color: var(--txt-sub); cursor: pointer; transition: all 0.15s ease; font-family: inherit; font-size: 14px; font-weight: 700;
+  }
+  .subject-tab:hover { background: rgba(255, 255, 255, 0.03); color: var(--txt-main); }
+  .subject-tab.active { background: var(--bg-card); color: #fff; border: 1px solid var(--brd-subtle); box-shadow: inset 3px 0 0 var(--clr-main); }
+  .subject-tab .tab-badge { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--bg-void); padding: 2px 6px; border-radius: 20px; color: var(--clr-main); border: 1px solid var(--brd-subtle); }
+
+  /* ─── محتوای اصلی مباحث ────────────────────────────────────────── */
+  .content-area { flex: 1; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+  
+  .view-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .view-title { font-size: 24px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 10px; }
+  .view-title::before { content: '●'; color: var(--clr-main); font-size: 18px; }
+
+  /* فرم افزودن ردیف جدید با کارهای مخصوص به خودش */
+  .add-chapter-box {
+    background: var(--bg-panel); border: 1px solid var(--brd-subtle); border-radius: var(--radius-lg); padding: 20px;
+  }
+  .box-header { font-size: 14px; font-weight: 800; color: var(--txt-main); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  
+  .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 600px) { .grid-inputs { grid-template-columns: 1fr; } }
+
+  .input-control {
+    width: 100%; background: var(--bg-void); border: 1px solid var(--brd-subtle); border-radius: var(--radius-sm);
+    color: #fff; padding: 10px 14px; font-family: inherit; font-size: 13px; outline: none; transition: border 0.15s;
+  }
+  .input-control:focus { border-color: var(--clr-main); }
+
+  /* لیست کارت‌های مباحث (چون هر ردیف ستون متفاوتی دارد، مدل کارتی یا ردیف‌های مستقل مجزا بهترین ارگونومی را دارد) */
+  .chapters-list-wrapper { display: flex; flex-direction: column; gap: 16px; }
+  
+  .chapter-card {
+    background: var(--bg-panel); border: 1px solid var(--brd-subtle); border-radius: var(--radius-lg); overflow: hidden;
+    display: flex; flex-direction: column; transition: border 0.2s;
+  }
+  .chapter-card.completed { border-color: rgba(168, 85, 247, 0.4); background: rgba(168, 85, 247, 0.01); }
+  
+  .card-top {
+    background: var(--bg-card); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--brd-subtle);
+  }
+  .card-title { font-size: 15px; font-weight: 800; color: #fff; }
+  .card-top-actions { display: flex; align-items: center; gap: 12px; }
+
+  .card-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  
+  /* گرید چک‌باکس‌های پویای هر ردیف */
+  .tasks-dynamic-grid { display: flex; flex-wrap: wrap; gap: 16px; }
+  
+  .checkbox-wrapper { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; background: var(--bg-void); padding: 8px 14px; border-radius: var(--radius-sm); border: 1px solid var(--brd-subtle); transition: all 0.15s; }
+  .checkbox-wrapper:hover { border-color: var(--clr-main); }
+  .checkbox-box {
+    width: 22px; height: 22px; border-radius: 5px; border: 2px solid var(--brd-active); background: var(--bg-card);
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s ease; flex-shrink: 0;
+  }
+  .checkbox-box svg { opacity: 0; transform: scale(0.5); transition: all 0.15s ease; }
+  .checkbox-wrapper.is-checked { background: rgba(168, 85, 247, 0.06); border-color: var(--clr-main); }
+  .checkbox-wrapper.is-checked .checkbox-box { background: linear-gradient(135deg, var(--clr-main-d), var(--clr-main)); border-color: var(--clr-main); }
+  .checkbox-wrapper.is-checked .checkbox-box svg { opacity: 1; transform: scale(1); }
+  .checkbox-lbl { font-size: 13px; color: var(--txt-sub); font-weight: 600; }
+  .checkbox-wrapper.is-checked .checkbox-lbl { color: #fff; }
+
+  /* بخش یادداشت و مدیریت آنی کارهای هر کارت */
+  .card-footer-form { display: grid; grid-template-columns: 1fr 280px; gap: 12px; align-items: center; border-top: 1px solid var(--brd-subtle); padding-top: 14px; }
+  @media (max-width: 768px) { .card-footer-form { grid-template-columns: 1fr; } }
+
+  .textarea-notes {
+    width: 100%; background: var(--bg-void); border: 1px solid var(--brd-subtle); color: var(--txt-sub); font-family: inherit;
+    font-size: 13px; outline: none; resize: none; padding: 8px 12px; border-radius: var(--radius-sm); height: 38px; line-height: 20px;
+  }
+  .textarea-notes:focus { border-color: var(--clr-main); color: var(--txt-main); }
+
+  .empty-placeholder { padding: 48px; text-align: center; color: var(--txt-muted); font-size: 14px; background: var(--bg-panel); border: 1px solid var(--brd-subtle); border-radius: var(--radius-lg); }
+  
+  /* اعلان سیستم */
+  .toast-layer { position: fixed; bottom: 24px; left: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; }
+  .toast-msg { background: var(--bg-card); border: 1px solid var(--brd-active); border-left: 4px solid var(--clr-main); border-radius: var(--radius-sm); padding: 12px 20px; font-size: 13px; color: var(--txt-main); box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: toastIn 0.2s ease forwards; }
+  @keyframes toastIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-container">
+    <div class="logo">دیمن<span>تسک</span></div>
+    
+    <div class="global-progress-box">
+      <div class="progress-meta">
+        <span>میزان کل پیشرفت (میانگین کل کارهای تمام دروس)</span>
+        <span id="globalPctText">0%</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="globalProgressFill"></div>
+      </div>
+    </div>
+
+    <div class="backup-actions">
+      <label class="btn btn-secondary">
+        📥 بارگذاری فایل بکاپ
+        <input type="file" accept=".json" style="display:none" onchange="importBackupData(event)" />
+      </label>
+      <button class="btn btn-primary" onclick="exportBackupData()">📤 دانلود فایل پشتیبان (JSON)</button>
+    </div>
+  </div>
+</header>
+
+<div class="main-layout">
+  
+  <aside class="sidebar">
+    <div class="sidebar-title">📚 لیست ۱۰ درس اصلی</div>
+    <div id="sidebarTabsContainer">
+      </div>
+  </aside>
+
+  <main class="content-area">
+    
+    <div class="view-heading">
+      <h2 class="view-title" id="currentSubjectTitle">نام درس</h2>
+      <div style="font-size: 13px; color: var(--txt-sub);">
+        پیشرفت این درس: <strong id="subjectProgressText" style="color:var(--clr-main); font-family:'JetBrains Mono'; font-size:15px;">0%</strong>
+      </div>
+    </div>
+
+    <section class="add-chapter-box">
+      <div class="box-header">＋ ساخت مبحث جدید با ستون‌های دلخواه و اختصاصی</div>
+      <div class="grid-inputs">
+        <input type="text" id="newChapterTitle" class="input-control" placeholder="نام مبحث (مثال: فصل ۱ زیست - مولکول‌ها)" />
+        <input type="text" id="newChapterColumns" class="input-control" placeholder="کارها را با کاما (، یا ,) جدا کنید. مثال: فیلم، مرور کتاب، تست" />
+      </div>
+      <div style="text-align: left;">
+        <button class="btn btn-primary btn-sm" onclick="createNewChapterWithColumns()">ایجاد مبحث اختصاصی</button>
+      </div>
+    </section>
+
+    <div class="chapters-list-wrapper" id="chaptersListContainer">
+      </div>
+
+  </main>
+</div>
+
+<div class="toast-layer" id="toastLayer"></div>
+
+<script>
+// لیست ثابت ۱۰ درس اعلام شده از طرف شما
+const SYSTEM_SUBJECTS = ['زیست', 'فیزیک', 'شیمی', 'ریاضی', 'فارسی', 'عربی', 'انگلیسی', 'دینی', 'هویت', 'سلامت'];
+
+// ساختار پیشرفته حالت برنامه (حالا هر ردیف ستون‌های اختصاصی خودش را در آرایه columns دارد)
+let appState = {
+  activeSubject: 'زیست',
+  subjectsData: {}
+};
+
+// نمونه پیش‌فرض جهت ایده گرفتن اولیه کاربر پس از اولین لود سایت
+function generateInitialState() {
+  SYSTEM_SUBJECTS.forEach(sub => {
+    appState.subjectsData[sub] = {
+      rows: []
+    };
+  });
+
+  // چند نمونه اولیه برای زیست و ریاضی ایجاد می‌کنیم
+  appState.subjectsData['زیست'].rows = [
+    {
+      id: 'r1',
+      title: 'فصل اول زیست - مولکول‌های زیستی',
+      columns: ['دیدن فیلم درس', 'مرور از روی کتاب', 'حل سوال'],
+      tasks: {'دیدن فیلم درس': true, 'مرور از روی کتاب': false, 'حل سوال': false},
+      notes: 'فیلم استاد دیده شد، نیاز به مرور متن کتاب دارد.'
+    },
+    {
+      id: 'r2',
+      title: 'ژنتیک کنکور (بخش پیشرفته)',
+      columns: ['ویدیو آموزشی', 'خلاصه‌نویسی', 'تست آموزشی', 'تست زمان‌دار'],
+      tasks: {'ویدیو آموزشی': false, 'خلاصه‌نویسی': false, 'تست آموزشی': false, 'تست زمان‌دار': false},
+      notes: 'این مبحث سخت است و ۴ کار اختصاصی نیاز دارد.'
+    }
+  ];
+
+  appState.subjectsData['ریاضی'].rows = [
+    {
+      id: 'm1',
+      title: 'فصل اول ریاضی - تابع',
+      columns: ['درسنامه کتاب', 'حل تمرین تشریحی'],
+      tasks: {'درسنامه کتاب': false, 'حل تمرین تشریحی': false},
+      notes: ''
+    }
+  ];
+}
+
+// ─── توابع رندرینگ رابط کاربری ───────────────────────────────────────
+function renderDashboard() {
+  renderSidebarTabs();
+  renderChaptersList();
+  calculateAllProgress();
+}
+
+// رندر تب‌های کناری دروس دهگانه به همراه نمایش سریع تعداد فصول موجود
+function renderSidebarTabs() {
+  const container = document.getElementById('sidebarTabsContainer');
+  container.innerHTML = '';
+
+  SYSTEM_SUBJECTS.forEach(sub => {
+    const isActive = (appState.activeSubject === sub);
+    const btn = document.createElement('button');
+    btn.className = `subject-tab ${isActive ? 'active' : ''}`;
+    btn.onclick = () => {
+      appState.activeSubject = sub;
+      renderDashboard();
+      saveToLocalStorage();
+    };
+
+    const rowCount = appState.subjectsData[sub].rows.length;
+    btn.innerHTML = `
+      <span>${sub}</span>
+      <span class="tab-badge">${rowCount} مبحث</span>
+    `;
+    container.appendChild(btn);
+  });
+}
+
+// رندر کارت‌های مباحث درس فعال (که هر کارت ستون‌های مستقل خودش را دارد)
+function renderChaptersList() {
+  const container = document.getElementById('chaptersListContainer');
+  container.innerHTML = '';
+
+  const subName = appState.activeSubject;
+  const data = appState.subjectsData[subName];
+
+  document.getElementById('currentSubjectTitle').textContent = `درس ${subName}`;
+
+  if (data.rows.length === 0) {
+    container.innerHTML = `
+      <div class="empty-placeholder">
+        در حال حاضر هیچ بخش یا فصلی برای درس <strong>${subName}</strong> تعریف نکرده‌اید.<br>
+        از فرم بالا نام مبحث و ستون‌های اختصاصی آن را وارد کنید تا ساخته شود!
+      </div>`;
+    return;
+  }
+
+  data.rows.forEach(row => {
+    // بررسی اینکه آیا همه کارهای این ردیف خاص انجام شده‌اند یا خیر
+    const hasColumns = row.columns && row.columns.length > 0;
+    const isCompleted = hasColumns && row.columns.every(c => row.tasks[c] === true);
+
+    const card = document.createElement('div');
+    card.className = `chapter-card ${isCompleted ? 'completed' : ''}`;
+
+    // هدر کارت
+    let html = `
+      <div class="card-top">
+        <span class="card-title">${escapeHTML(row.title)}</span>
+        <div class="card-top-actions">
+          <button class="btn btn-secondary btn-sm" style="color: var(--txt-muted); padding: 4px 8px;" onclick="deleteChapterRow('${row.id}')">✕ حذف مبحث</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="tasks-dynamic-grid">
+    `;
+
+    // رندر دکمه‌های چک‌باکس ستون‌های کاملاً اختصاصی همین ردیف
+    if (!hasColumns) {
+      html += `<span style="color:var(--txt-muted); font-size:12px;">هیچ ستون یا کاری برای این مبحث تعریف نشده است.</span>`;
+    } else {
+      row.columns.forEach(col => {
+        const checked = !!row.tasks[col];
+        html += `
+          <div class="checkbox-wrapper ${checked ? 'is-checked' : ''}" onclick="toggleTaskCheckbox('${row.id}', '${escapeHTML(col)}')">
+            <div class="checkbox-box">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="checkbox-lbl">${escapeHTML(col)}</span>
+          </div>
+        `;
+      });
+    }
+
+    // فوتر کارت شامل یادداشت و فرم افزودن سریع کار جدید به همین ردیف خاص
+    html += `
+        </div>
+        <div class="card-footer-form">
+          <input type="text" class="textarea-notes" placeholder="یادداشت وضعیت پیشرفت..." value="${escapeHTML(row.notes)}" onblur="updateRowNote('${row.id}', this.value)" />
+          <div style="display:flex; gap:6px;">
+            <input type="text" id="quickAddInput-${row.id}" class="input-control" style="padding:4px 10px; font-size:12px; height:38px;" placeholder="افزودن ستون جدید به این مبحث..." />
+            <button class="btn btn-secondary btn-sm" style="height:38px;" onclick="addSingleColumnToRow('${row.id}')">＋</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    card.innerHTML = html;
+    container.appendChild(card);
+  });
+}
+
+// ─── مدیریت محاسبات پیشرفت هوشمند (Progress Engine) ─────────────────────
+function calculateAllProgress() {
+  let totalGlobalTasks = 0;
+  let doneGlobalTasks = 0;
+  let currentSubjectTotal = 0;
+  let currentSubjectDone = 0;
+
+  // گشتن در تمام مباحث ۱۰ درس برای خروجی دقیق درصدها
+  SYSTEM_SUBJECTS.forEach(sub => {
+    const data = appState.subjectsData[sub];
+    
+    data.rows.forEach(row => {
+      row.columns.forEach(col => {
+        totalGlobalTasks++;
+        if (row.tasks[col]) doneGlobalTasks++;
+
+        // محاسبات مربوط به درس فعال جاری
+        if (sub === appState.activeSubject) {
+          currentSubjectTotal++;
+          if (row.tasks[col]) currentSubjectDone++;
+        }
+      });
+    });
+  });
+
+  // آپدیت نوار پیشرفت اختصاصی درس فعال
+  const subPct = currentSubjectTotal > 0 ? Math.round((currentSubjectDone / currentSubjectTotal) * 100) : 0;
+  document.getElementById('subjectProgressText').textContent = subPct + '%';
+
+  // محاسبه میانگین کل ۱۰ درس باهم در هدر بالای سایت
+  const globalPct = totalGlobalTasks > 0 ? Math.round((doneGlobalTasks / totalGlobalTasks) * 100) : 0;
+  document.getElementById('globalPctText').textContent = globalPct + '%';
+  document.getElementById('globalProgressFill').style.width = globalPct + '%';
+}
+
+// ─── متدهای دستکاری داده‌ها و شخصی‌سازی‌ها ──────────────────────────────
+
+// ایجاد یک مبحث جدید با ستون‌های کاملاً اختصاصی خودش
+function createNewChapterWithColumns() {
+  const titleInput = document.getElementById('newChapterTitle');
+  const colsInput = document.getElementById('newChapterColumns');
+
+  const title = titleInput.value.trim();
+  const colsRaw = colsInput.value.trim();
+
+  if (!title) { showToast('لطفاً عنوان مبحث را وارد کنید.', 'error'); return; }
+
+  // پردازش و تکه‌تکه کردن کارهای وارد شده با استفاده از ویرگول فارسی یا انگلیسی
+  let columns = [];
+  if (colsRaw) {
+    columns = colsRaw.split(/[،,]+/).map(c => c.trim()).filter(c => c.length > 0);
+  }
+
+  // اگر کاربر هیچ ستونی وارد نکرد، چند ستون عمومی به صورت پیش‌فرض برایش می‌گذاریم
+  if (columns.length === 0) {
+    columns = ['مطالعه', 'تست'];
+  }
+
+  const tasksObject = {};
+  columns.forEach(c => tasksObject[c] = false);
+
+  const subName = appState.activeSubject;
+  appState.subjectsData[subName].rows.push({
+    id: 'ch-' + Math.random().toString(36).slice(2, 11),
+    title: title,
+    columns: columns,
+    tasks: tasksObject,
+    notes: ''
+  });
+
+  titleInput.value = '';
+  colsInput.value = '';
+  renderDashboard();
+  saveToLocalStorage();
+  showToast(`مبحث "${title}" با ستون‌های اختصاصی ایجاد شد.`);
+}
+
+// افزودن یک ستون تک و جدید به یک ردیف خاص (بعد از ساخته شدن کارت)
+function addSingleColumnToRow(rowId) {
+  const input = document.getElementById(`quickAddInput-${rowId}`);
+  const colName = input.value.trim();
+  if (!colName) return;
+
+  const data = appState.subjectsData[appState.activeSubject];
+  const row = data.rows.find(r => r.id === rowId);
+
+  if (row) {
+    if (row.columns.includes(colName)) {
+      showToast('این ستون از قبل در این ردیف وجود دارد!', 'error');
+      return;
+    }
+    row.columns.push(colName);
+    row.tasks[colName] = false;
+
+    input.value = '';
+    renderDashboard();
+    saveToLocalStorage();
+    showToast(`ستون جدید به این مبحث اضافه شد.`);
+  }
+}
+
+function toggleTaskCheckbox(rowId, columnName) {
+  const data = appState.subjectsData[appState.activeSubject];
+  const row = data.rows.find(r => r.id === rowId);
+  if (row) {
+    row.tasks[columnName] = !row.tasks[columnName];
+    renderDashboard();
+    saveToLocalStorage();
+  }
+}
+
+function updateRowNote(rowId, val) {
+  const data = appState.subjectsData[appState.activeSubject];
+  const row = data.rows.find(r => r.id === rowId);
+  if (row) { row.notes = val; saveToLocalStorage(); }
+}
+
+function deleteChapterRow(rowId) {
+  if (confirm('آیا از حذف این مبحث اطمینان دارید؟')) {
+    const data = appState.subjectsData[appState.activeSubject];
+    data.rows = data.rows.filter(r => r.id !== rowId);
+    renderDashboard();
+    saveToLocalStorage();
+    showToast('مبحث حذف شد.');
+  }
+}
+
+// ─── منطق پورت فایلی مستقل از سرور (Export / Import JSON) ───────────────
+function exportBackupData() {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+  const downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", `برنامه_درسی_پیشرفته_رادیکال_${new Date().toISOString().slice(0,10)}.json`);
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+  showToast('🚀 فایل بکاپ با موفقیت دانلود شد.');
+}
+
+function importBackupData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const importedData = JSON.parse(e.target.result);
+      if (importedData && importedData.subjectsData) {
+        appState = importedData;
+        renderDashboard();
+        saveToLocalStorage();
+        showToast('✅ فایل پشتیبان با موفقیت جایگزین شد!');
+      } else {
+        showToast('ساختار فایل انتخاب شده معتبر نیست.', 'error');
+      }
+    } catch (err) {
+      showToast('خطا در خواندن فایل پشتیبان.', 'error');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ─── مدیریت ذخیره‌سازی محلی داخل دستگاه کاربر ─────────────────────────────
+const STORAGE_KEY = 'radical_ultra_routine_v2';
+function saveToLocalStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+}
+function loadFromLocalStorage() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.subjectsData) {
+        appState = parsed;
+        return true;
+      }
+    } catch(e) {}
+  }
+  return false;
+}
+
+function escapeHTML(str) {
+  return String(str || '').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function showToast(msg) {
+  const layer = document.getElementById('toastLayer');
+  const item = document.createElement('div');
+  item.className = 'toast-msg';
+  item.textContent = msg;
+  layer.appendChild(item);
+  setTimeout(() => item.remove(), 3500);
+}
+
+// ─── اجرای فرآیند راه‌اندازی اولیه وبسایت (Init Boot) ─────────────────────
+(function initApp() {
+  const stateFound = loadFromLocalStorage();
+  if (!stateFound) {
+    generateInitialState();
+  }
+  renderDashboard();
+})();
+</script>
+</body>
+</html>
